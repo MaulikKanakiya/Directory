@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Directory</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+	<style type="text/css">
+		.header
+		{
+			width: 100%;
+			background-color: #1874CD;
+			color: white;
+			text-align: center;
+			padding: 20px;
+			font-size: 24px;
+			font-weight: bold;
+		}
+	</style>
+	<script type="text/javascript">
+		var directory = [];
+		var count = 1;
+		
+		$(document).on('click','#sbmtAdd',function(){
+			
+			var contact = [];
+			var name = $('#name').val();
+			if(name!=null && name!=""){
+				contact.push(count++);
+				contact.push(name);
+				contact.push($('#mobile').val());
+
+				directory.push(contact);
+			}
+
+			clearData();
+			showContacts();
+		});
+		
+		function clearData(){
+			$('#name').val("");
+			$('#mobile').val("");
+			$('#rptName').html("");			
+			$('#rptMobile').html("");
+		}
+
+		function showContacts(){
+			var data = '';
+			for (i = 0; i < directory.length; i++) {
+				if(directory[i]!=null)
+					data += '<tr id="r_'+ directory[i][0] +'"><td>'+ directory[i][1] +'</td><td>'+ directory[i][2] +'</td><td><button type="button" class="btn btn-danger dltContact" id="'+ directory[i][0] +'">DELETE</button></td></tr>';
+			}
+			$('#tblContacts').html(data);
+		}
+
+		$(document).on('click','.dltContact',function(){
+			
+			var currentId = $(this).attr('id');
+			for (i = 0; i < directory.length; i++) {
+				if(directory[i]!=null && directory[i][0] == currentId){
+					delete directory[i];
+					break;
+				}
+			}
+			currentId = "r_" + currentId;
+			$('tbody#tblContacts tr#' + currentId).remove();
+		});
+		
+		$(document).on('click','#btnAdd',function(){
+			
+			$('#divHome').css("display", "none");
+			$('#divAdd').css("display", "block");
+		});
+		
+		$(document).on('click','#btnAdd',function(){
+			
+			$('.header').html("ADD SUBSCRIBER");
+			$('#divHome').css("display", "none");
+			$('#divAdd').css("display", "block");
+		});
+		
+		$(document).on('click','.home',function(){
+			
+			clearData();
+			$('.header').html("PHONE DIRECTORY");
+			$('#divHome').css("display", "block");
+			$('#divAdd').css("display", "none");
+		});
+
+		$(document).on('change keyup blur','#name',function(){
+			
+			$('#rptName').html( $(this).val() );
+		});
+
+		$(document).on('change keyup blur','#mobile',function(){
+			
+			$('#rptMobile').html( $(this).val() );
+		});
+
+		var specialKeys = new Array();
+		specialKeys.push(8,46);
+		function IsNumeric(e) {
+			var keyCode = e.which ? e.which : e.keyCode;
+			var ret = ((keyCode >= 48 && keyCode <= 57) || specialKeys.indexOf(keyCode) != -1);
+			return ret;
+		}
+	</script>
+</head>
+<body>
+	<div class="header">PHONE DIRECTORY</div>
+	<div id="divHome">
+		<div class="container"><br>
+			<button type="button" class="btn btn-success" name="btnAdd" id="btnAdd">ADD</button><br><br>
+
+			<table class="table table-borderless">
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Mobile No</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody id="tblContacts">
+					
+				</tbody>
+			</table>
+			
+		</div>
+	</div>
+	<div id="divAdd" style="display: none;">
+		<div class="container"><br>
+			<button type="button" class="btn btn-default home">BACK</button><br><br>
+			<div class="form-group">
+				<label for="name">Name:</label>
+				<input type="text" class="form-control txt" id="name">
+			</div>
+			<div class="form-group">
+				<label for="mobile">Mobile No:</label>
+				<input type="text" class="form-control txt" id="mobile" onkeypress="return IsNumeric(event);">
+			</div>
+
+			<p class="text-primary"><b>Subscriber to be added: </b></p>
+			<div class="form-group">
+				<label for="name">Name:</label>
+				<label id="rptName" style="font-weight: normal;"></label>
+			</div>
+			<div class="form-group">
+				<label for="mobile">Mobile No:</label>
+				<label id="rptMobile" style="font-weight: normal;"></label>
+			</div>
+
+			<button type="button" class="btn btn-success  home" name="sbmtAdd" id="sbmtAdd">ADD</button>
+		</div>
+	</div>
+</body>
+</html>
